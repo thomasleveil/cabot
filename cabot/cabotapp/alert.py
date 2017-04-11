@@ -51,7 +51,7 @@ class AlertPluginUserData(PolymorphicModel):
 
 def send_alert(service, duty_officers=None):
     users = service.users_to_notify.filter(is_active=True)
-    for alert in service.alerts.filter(enabled=True):
+    for alert in service.alerts.filter(enabled=True).get_real_instances():
         try:
             alert._send_alert(service, users, duty_officers)
         except Exception as e:
@@ -60,7 +60,7 @@ def send_alert(service, duty_officers=None):
 
 def send_alert_update(service, duty_officers=None):
     users = service.users_to_notify.filter(is_active=True)
-    for alert in service.alerts.filter(enabled=True):
+    for alert in service.alerts.filter(enabled=True).get_real_instances():
         if hasattr(alert, 'send_alert_update'):
             try:
                 alert._send_alert_update(service, users, duty_officers)
